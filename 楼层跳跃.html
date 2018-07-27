@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>楼层跳跃</title>
+    <style>
+        *{
+            padding: 0px ;
+            margin: 0px ;
+        }
+        html,body  {
+            height: 100%;
+            width: 100%;
+        }
+        ol{
+            position: fixed;
+            top: 200px;
+            left: 30px;
+
+        }
+        ol li{
+            list-style: none ;
+            height: 50px;
+            width: 70px;
+            text-align: center ;
+            line-height: 50px;
+            border: 1px solid #666666;
+            cursor: pointer ;
+        }
+        ul {
+            height: 100%;
+            width: 100%;
+        }
+        li{
+            height:100%;
+            width: 100%;
+            list-style: none ;
+            text-align: center ;
+            line-height: 700px;
+
+        }
+    </style>
+    <script src = 'tool封装好的js文件.js '></script>
+</head>
+<body>
+    <ol>
+        <li>裤子</li>
+        <li>袜子</li>
+        <li>裙子</li>
+        <li>帽子</li>
+        <li>鞋子</li>
+    </ol>
+    <ul>
+        <li>裤子</li>
+        <li>袜子</li>
+        <li>裙子</li>
+        <li>帽子</li>
+        <li>鞋子</li>
+    </ul>
+
+    <script>
+        //需求：点击ol对应的Li屏幕缓慢会滑到相应的位置
+        //老三步
+
+        //1.获取元素以及相应的元素
+        //获取ol中的所有li以及ul中的所有li
+        var ol = document .getElementsByTagName ("ol" )[0];
+        var olArr = ol.children ;
+        var ul = document .getElementsByTagName ("ul")[0];
+        var ulArr = ul.children ;
+        //放一个存放颜色数组
+        var arr = ['blue','red','yellow','pink','orange'];
+        //设置一个目标位置target,以及当前位置leader,以及一个定时器
+        var target = 0;
+        var leader = 0;
+        var timer = null;
+        //2.绑定事件
+        //为每一个ol中的li绑定点击事件，for循环
+        for(var i = 0;i<arr .length ;i++){
+            //为每一个li都设置颜色
+            olArr [i] .style.backgroundColor = arr[i];
+            ulArr [i] .style.backgroundColor = arr[i];
+            //为每一个li设置一个索引index
+            olArr [i].index = i;
+            ulArr [i].index = i;
+            //为每一个li定义一个点击事件
+            olArr [i].onclick =function () {
+
+                //3书写事件函数
+                //获取target的值为每一个ul中中的li的offsetTop
+                //每次都得先关定时器
+                target = ulArr[this .index ] .offsetTop ;
+                clearInterval (timer )
+                timer = setInterval ( function () {
+                    //新五步
+                    //1.获取步长
+                    var step = (target - leader)/10;
+                    //2.二次处理步长
+                    step = step>0 ? Math .ceil (step) :Math .floor (step );
+                    //3.屏幕滑动
+                    leader +=step;
+                    scrollTo (0,leader );
+                    //4.当剩下的距离小于step,则直接滑到相应的位置上
+                    if(Math .abs(leader -target )<Math .abs (step)){
+                        scrollTo (0,target );
+                        //5.关闭定时器
+                        clearInterval (timer);
+                    }
+
+                },28)
+
+
+            }
+        }
+
+        //每次滑动屏幕都获取当前滚动的高度赋值给leader
+        window .onscroll = function () {
+            leader = scroll ().top;
+            console .log(leader );
+        }
+
+
+    </script>
+</body>
+</html>
